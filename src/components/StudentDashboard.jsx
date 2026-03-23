@@ -20,7 +20,7 @@ export default function StudentDashboard({ onLogout, user, onStartQuiz }) {
     <div className="cyber-bg" style={{ position: 'fixed', inset: 0, zIndex: -1 }}>
       <div className="admin-container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="admin-header">
-          <h1>CSM 153 / EE287 - Circuit Theory Exam Portal</h1>
+          <h1>NONYPREP - EXAM SCHEDULER</h1>
           <p style={{ color: '#a0a0b0', marginTop: '10px' }}>
             Welcome, <span style={{ color: '#53CBF3', fontWeight: 'bold' }}>{displayName}</span>
           </p>
