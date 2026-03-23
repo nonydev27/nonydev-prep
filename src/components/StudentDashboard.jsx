@@ -11,6 +11,27 @@ export default function StudentDashboard({ onLogout, user, onStartQuiz }) {
       status: 'active',
       examPassword: 'CIRCUIT26'
     },
+
+      { 
+      id: 2, 
+      title: 'ENGL 157 - Communication Skills', 
+      questions: 120, 
+      duration: 120, 
+      description: 'Introduction, Listening Skills, Speaking Skills, Reading Skills, and Writing Skills. Questions are based on the topics covered in the course.',
+      status: '',
+      examPassword: 'ENGL26'
+    },
+
+     { 
+      id: 3, 
+      title: 'MATH 171 - Calculus', 
+      questions: 60, 
+      duration: 120, 
+      description: 'Introduction, Limits, Derivatives, Integrals, and Applications of Calculus. Questions are based on the topics covered in the course.',
+      status: '',
+      examPassword: 'CALCULUS26'
+    },
+
   ]);
 
   // Get user's name - prioritize name field, fall back to reference number
