@@ -12,6 +12,7 @@ export default function Login({ onLogin }) {
     '21855561': 'Agyeman Nana Yaw',
     '21839316': 'Benniton Otumfuo-Nyarko',
     '21875777': 'Memunatu Lukman',
+    '22041319' : 'Osei Prempeh Erica',
   };
 
   // Default password for all students

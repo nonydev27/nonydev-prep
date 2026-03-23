@@ -4,12 +4,32 @@ export default function StudentDashboard({ onLogout, user, onStartQuiz }) {
   const [quizzes] = useState([
     { 
       id: 1, 
-      title: 'CSM 153 / EE287 - Circuit Theory', 
+      title: 'CSM 153 - Circuit Theory', 
       questions: 80, 
       duration: 120, 
       description: 'Comprehensive Circuit Theory exam covering: Introduction, Direct Circuit Analysis, Magnetism, AC Theory, Mesh Analysis, and Nodal Analysis.',
       status: 'active',
-      examPassword: 'CIRCUIT2024'
+      examPassword: 'CIRCUIT26'
+    },
+
+     { 
+      id: 2, 
+      title: 'ENGL 157 - Communication Skills', 
+      questions: 120, 
+      duration: 120, 
+      description: 'Comprehensive Circuit Theory exam covering: Introduction, Direct Circuit Analysis, Magnetism, AC Theory, Mesh Analysis, and Nodal Analysis.',
+      status: '',
+      examPassword: 'ENGLISH26'
+    },
+
+     { 
+      id: 3, 
+      title: 'MATH 171 - Calculus', 
+      questions: 50, 
+      duration: 120, 
+      description: 'Comprehensive Circuit Theory exam covering: Introduction, Direct Circuit Analysis, Magnetism, AC Theory, Mesh Analysis, and Nodal Analysis.',
+      status: '',
+      examPassword: 'CALCULUS26'
     },
   ]);
 
