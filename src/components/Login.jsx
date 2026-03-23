@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-export default function Login({ onLogin, onSwitchToSignup }) {
+export default function Login({ onLogin }) {
   const [referenceNumber, setReferenceNumber] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -12,12 +12,11 @@ export default function Login({ onLogin, onSwitchToSignup }) {
     '21855561': 'Agyeman Nana Yaw',
     '21839316': 'Benniton Otumfuo-Nyarko',
     '21875777': 'Memunatu Lukman',
-
   };
 
   // Default password for all students
   const DEFAULT_PASSWORD = '12345';
-  const ADU_PASSWORD = '';
+   const ADU_PASSWORD = '';
   const DEK_PASSWORD = '';
   const AGY_PASSWORD = '';
   const BEN_PASSWORD = '';
@@ -51,7 +50,7 @@ export default function Login({ onLogin, onSwitchToSignup }) {
       if (refNum === 'ADMIN' && password === 'admin123') {
         onLogin({ referenceNumber: 'ADMIN', name: 'Administrator', role: 'admin' });
       } else {
-        setError('Reference number not found. Please register first.');
+        setError('Reference number not found.');
       }
     }
   };
@@ -130,19 +129,6 @@ export default function Login({ onLogin, onSwitchToSignup }) {
               Access Exam
             </button>
           </form>
-
-          <div className="cyber-form-footer">
-            <p style={{ color: '#a0a0b0' }}>
-              Don't have an account?{' '}
-              <span 
-                className="cyber-link" 
-                onClick={onSwitchToSignup}
-                style={{ cursor: 'pointer' }}
-              >
-                Register Now
-              </span>
-            </p>
-          </div>
         </div>
       </div>
     </div>

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import './cyber-theme.css';
 import Login from './components/Login';
-import Signup from './components/Signup';
 import Admin from './components/Admin';
 import StudentDashboard from './components/StudentDashboard';
 import Quiz from './components/Quiz';
@@ -21,12 +20,6 @@ function App() {
     }
   };
 
-  // Handle signup
-  const handleSignup = (userData) => {
-    setUser(userData);
-    setCurrentPage('dashboard');
-  };
-
   // Handle logout
   const handleLogout = () => {
     setUser(null);
@@ -40,16 +33,6 @@ function App() {
     setCurrentPage('quiz');
   };
 
-  // Switch to signup
-  const handleSwitchToSignup = () => {
-    setCurrentPage('signup');
-  };
-
-  // Switch to login
-  const handleSwitchToLogin = () => {
-    setCurrentPage('login');
-  };
-
   // Render current page
   const renderPage = () => {
     switch (currentPage) {
@@ -57,14 +40,6 @@ function App() {
         return (
           <Login 
             onLogin={handleLogin} 
-            onSwitchToSignup={handleSwitchToSignup}
-          />
-        );
-      case 'signup':
-        return (
-          <Signup 
-            onSignup={handleSignup} 
-            onSwitchToLogin={handleSwitchToLogin}
           />
         );
       case 'admin':
@@ -93,7 +68,6 @@ function App() {
         return (
           <Login 
             onLogin={handleLogin} 
-            onSwitchToSignup={handleSwitchToSignup}
           />
         );
     }
