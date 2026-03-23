@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Admin({ onLogout, user }) {
   const [activeTab, setActiveTab] = useState('results');
+  const [quizResults, setQuizResults] = useState([]);
 
   // Registered students database
   const students = [
-    { referenceNumber: '22479389', name: 'Adu Boahen Jerry Nana Yao\' },
+    { referenceNumber: '22479389', name: "Adu Boahen Jerry Nana Yaw'" },
     { referenceNumber: '22391240', name: 'Dekyi Cheryl Saah' },
     { referenceNumber: '21855561', name: 'Agyeman Nana Yaw' },
     { referenceNumber: '21839316', name: 'Benniton Otumfuo-Nyarko' },
@@ -26,73 +27,28 @@ export default function Admin({ onLogout, user }) {
     },
   ]);
 
-  // Quiz results - synced with students
-  const [quizResults, setQuizResults] = useState([
-    { 
-      quizId: 1, 
-      studentRef: '22479389',
-      score: 0,
-      totalQuestions: 80,
-      warnings: 0,
-      submittedAt: null,
-      status: 'Not Started',
-      answers: []
-    },
-    { 
-      quizId: 1, 
-      studentRef: '22391240',
-      score: 0,
-      totalQuestions: 80,
-      warnings: 0,
-      submittedAt: null,
-      status: 'Not Started',
-      answers: []
-    },
-    { 
-      quizId: 1, 
-      studentRef: '21855561',
-      score: 0,
-      totalQuestions: 80,
-      warnings: 0,
-      submittedAt: null,
-      status: 'Not Started',
-      answers: []
-    },
-    { 
-      quizId: 1, 
-      studentRef: '21839316',
-      score: 0,
-      totalQuestions: 80,
-      warnings: 0,
-      submittedAt: null,
-      status: 'Not Started',
-      answers: []
-    },
-    { 
-      quizId: 1, 
-      studentRef: '21875777',
-      score: 0,
-      totalQuestions: 80,
-      warnings: 0,
-      submittedAt: null,
-      status: 'Not Started',
-      answers: []
-    },
-    { 
-      quizId: 1, 
-      studentRef: '22041319',
-      score: 0,
-      totalQuestions: 80,
-      warnings: 0,
-      submittedAt: null,
-      status: 'Not Started',
-      answers: []
-    },
-  ]);
-
   const [selectedStudent, setSelectedStudent] = useState(null);
   const [showStudentModal, setShowStudentModal] = useState(false);
   const [showCreateQuiz, setShowCreateQuiz] = useState(false);
+  
+  // Merge stored results with students who haven't taken the exam
+  const mergedResults = students.map(student => {
+    const storedResult = quizResults.find(r => r.studentRef === student.referenceNumber);
+    if (storedResult) {
+      return storedResult;
+    }
+    return {
+      quizId: 1,
+      studentRef: student.referenceNumber,
+      score: 0,
+      totalQuestions: 80,
+      warnings: 0,
+      submittedAt: null,
+      status: 'Not Started',
+      answers: []
+    };
+  });
+  
   const [newQuiz, setNewQuiz] = useState({
     title: '',
     questions: '',
@@ -109,16 +65,34 @@ export default function Admin({ onLogout, user }) {
 
   // Get student result by reference number
   const getStudentResult = (refNum) => {
-    return quizResults.find(r => r.studentRef === refNum);
+    return mergedResults.find(r => r.studentRef === refNum);
   };
+
+  // Load quiz results from localStorage
+  useEffect(() => {
+    const loadResults = () => {
+      const storedResults = JSON.parse(localStorage.getItem('quizResults') || '[]');
+      setQuizResults(storedResults);
+    };
+    loadResults();
+    
+    // Poll for new results every 5 seconds when on results tab
+    const interval = setInterval(() => {
+      if (activeTab === 'results') {
+        loadResults();
+      }
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [activeTab]);
 
   // Calculate statistics from quizResults
   const totalStudents = students.length;
-  const completedExams = quizResults.filter(r => r.status === 'Completed').length;
-  const terminatedExams = quizResults.filter(r => r.status === 'Terminated').length;
-  const notStarted = quizResults.filter(r => r.status === 'Not Started').length;
+  const completedExams = mergedResults.filter(r => r.status === 'Completed').length;
+  const terminatedExams = mergedResults.filter(r => r.status === 'Terminated').length;
+  const notStarted = mergedResults.filter(r => r.status === 'Not Started').length;
   const averageScore = completedExams > 0 
-    ? (quizResults.filter(r => r.status === 'Completed').reduce((acc, r) => acc + r.score, 0) / completedExams).toFixed(1)
+    ? (mergedResults.filter(r => r.status === 'Completed').reduce((acc, r) => acc + r.score, 0) / completedExams).toFixed(1)
     : 0;
 
   const handleViewStudent = (result) => {
@@ -261,7 +235,7 @@ export default function Admin({ onLogout, user }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {quizResults.map((result, index) => (
+                  {mergedResults.map((result, index) => (
                     <tr key={index} style={{ 
                       borderBottom: '1px solid rgba(84, 120, 255, 0.2)',
                       background: index % 2 === 0 ? 'transparent' : 'rgba(84, 120, 255, 0.05)'

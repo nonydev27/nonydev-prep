@@ -16,7 +16,7 @@ export default function Quiz({ onLogout, user }) {
 
   // Circuit Theory Quiz Data - All 80 Questions
   const quizData = {
-    title: 'CSM 153 / EE287 - Circuit Theory',
+    title: 'CSM 153 - Circuit Theory',
     duration: 120,
     questions: [
       // Part 1: Fundamentals & DC Analysis (Questions 1-10)
@@ -236,7 +236,7 @@ export default function Quiz({ onLogout, user }) {
 
   const handlePasswordSubmit = (e) => {
     e.preventDefault();
-    if (password === '12345') {
+    if (password === 'CIRCUIT26') {
       setShowPasswordModal(false);
       setQuizStarted(true);
     } else {
@@ -516,3 +516,41 @@ export default function Quiz({ onLogout, user }) {
 
           {/* Question Jump Select */}
           <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <select 
+              value={currentQuestion}
+              onChange={(e) => setCurrentQuestion(parseInt(e.target.value))}
+              className="cyber-input"
+              style={{ width: '200px', textAlign: 'center' }}
+            >
+              {quizData.questions.map((_, idx) => (
+                <option key={idx} value={idx}>
+                  Question {idx + 1}
+                </option>
+              ))}
+            </select>
+          </div>
+
+        </div>
+      )}
+
+      {/* Timer */}
+      {quizStarted && (
+        <div className="quiz-timer" style={{
+          position: 'fixed',
+          top: '20px',
+          right: '20px',
+          background: timeLeft < 300 ? 'rgba(255, 71, 87, 0.2)' : 'rgba(84, 120, 255, 0.2)',
+          padding: '10px 20px',
+          borderRadius: '8px',
+          color: timeLeft < 300 ? '#ff4757' : '#53CBF3',
+          fontSize: '18px',
+          fontWeight: 'bold',
+          border: `1px solid ${timeLeft < 300 ? '#ff4757' : '#5478FF'}`,
+          zIndex: 1000
+        }}>
+          {Math.floor(timeLeft / 60)}:{(timeLeft % 60).toString().padStart(2, '0')}
+        </div>
+      )}
+    </div>
+  );
+}
