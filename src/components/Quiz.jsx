@@ -14,7 +14,7 @@ export default function Quiz({ onLogout, user }) {
 
   // Circuit Theory Quiz Data - All 80 Questions
   const quizData = {
-    title: 'CSM 153 / EE287 - Circuit Theory',
+    title: 'CSM 153 - Circuit Theory',
     duration: 120,
     questions: [
       // Part 1: Fundamentals & DC Analysis (Questions 1-10)
