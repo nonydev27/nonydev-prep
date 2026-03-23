@@ -17,6 +17,11 @@ export default function Login({ onLogin, onSwitchToSignup }) {
 
   // Default password for all students
   const DEFAULT_PASSWORD = '12345';
+  const ADU_PASSWORD = '';
+  const DEK_PASSWORD = '';
+  const AGY_PASSWORD = '';
+  const BEN_PASSWORD = '';
+  const MEM_PASSWORD = '';
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -74,7 +79,7 @@ export default function Login({ onLogin, onSwitchToSignup }) {
           width: '100%',
           maxWidth: '420px'
         }}>
-          <h2>CSM 153 / EE287 - Circuit Theory Exam</h2>
+          <h2>NONYPREP-EXAM SCHEDULER</h2>
           <p style={{ color: '#a0a0b0', marginBottom: '20px', textAlign: 'center' }}>
             Login to access your exam
           </p>
