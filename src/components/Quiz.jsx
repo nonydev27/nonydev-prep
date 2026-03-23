@@ -516,28 +516,3 @@ export default function Quiz({ onLogout, user }) {
 
           {/* Question Jump Select */}
           <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-            <label style={{ color: '#a0a0b0', marginRight: '10px' }}>Go to Question:</label>
-            <select 
-              value={currentQuestion}
-              onChange={(e) => setCurrentQuestion(Number(e.target.value))}
-              style={{
-                background: 'rgba(0, 0, 0, 0.3)',
-                border: '1px solid #5478FF',
-                borderRadius: '4px',
-                color: '#ffffff',
-                padding: '8px 12px',
-                cursor: 'pointer'
-              }}
-            >
-              {quizData.questions.map((_, idx) => (
-                <option key={idx} value={idx}>
-                  Question {idx + 1}{answers[idx] !== undefined ? ' (Answered)' : ''}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}

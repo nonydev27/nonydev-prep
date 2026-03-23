@@ -8,7 +8,7 @@ export default function StudentDashboard({ onLogout, user, onStartQuiz }) {
       questions: 80, 
       duration: 120, 
       description: 'Comprehensive Circuit Theory exam covering: Introduction, Direct Circuit Analysis, Magnetism, AC Theory, Mesh Analysis, and Nodal Analysis.',
-      status: 'active',
+      status: '',
       examPassword: 'CIRCUIT26'
     },
 

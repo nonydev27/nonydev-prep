@@ -5,7 +5,7 @@ export default function Admin({ onLogout, user }) {
 
   // Registered students database
   const students = [
-    { referenceNumber: '22479389', name: 'Adu Boahen Jerry Nana Yao' },
+    { referenceNumber: '22479389', name: 'Adu Boahen Jerry Nana Yao\' },
     { referenceNumber: '22391240', name: 'Dekyi Cheryl Saah' },
     { referenceNumber: '21855561', name: 'Agyeman Nana Yaw' },
     { referenceNumber: '21839316', name: 'Benniton Otumfuo-Nyarko' },
@@ -14,85 +14,79 @@ export default function Admin({ onLogout, user }) {
   ];
 
   // Available quizzes
-  const [quizzes, setQuizzes] = useState([
+  const [quizzes] = useState([
     { 
       id: 1, 
       title: 'CSM 153 - Circuit Theory', 
       questions: 80, 
-      duration: 120,
+      duration: 1,
       password: '12345',
       status: 'active',
       examTime: '3:00 PM - 5:00 PM'
     },
   ]);
 
-  // Mock quiz results - in real app this would come from a database
-  const [quizResults] = useState([
+  // Quiz results - synced with students
+  const [quizResults, setQuizResults] = useState([
     { 
       quizId: 1, 
-      quizTitle: 'CSM 153 - Circuit Theory',
       studentRef: '22479389',
-      score: 72,
+      score: 0,
       totalQuestions: 80,
       warnings: 0,
-      submittedAt: '2024-03-23 14:30:00',
-      status: 'Completed',
-      answers: Array(80).fill(null).map((_, i) => i < 40 ? Math.floor(Math.random() * 4) : null)
+      submittedAt: null,
+      status: 'Not Started',
+      answers: []
     },
     { 
       quizId: 1, 
-      quizTitle: 'CSM 153 - Circuit Theory',
       studentRef: '22391240',
-      score: 65,
-      totalQuestions: 80,
-      warnings: 1,
-      submittedAt: '2024-03-23 14:45:00',
-      status: 'Completed',
-      answers: Array(80).fill(null).map((_, i) => i < 35 ? Math.floor(Math.random() * 4) : null)
-    },
-    { 
-      quizId: 1, 
-      quizTitle: 'CSM 153 - Circuit Theory',
-      studentRef: '21855561',
-      score: 78,
+      score: 0,
       totalQuestions: 80,
       warnings: 0,
-      submittedAt: '2024-03-23 15:00:00',
-      status: 'Completed',
-      answers: Array(80).fill(null).map((_, i) => i < 42 ? Math.floor(Math.random() * 4) : null)
+      submittedAt: null,
+      status: 'Not Started',
+      answers: []
     },
     { 
       quizId: 1, 
-      quizTitle: 'CSM 153 - Circuit Theory',
+      studentRef: '21855561',
+      score: 0,
+      totalQuestions: 80,
+      warnings: 0,
+      submittedAt: null,
+      status: 'Not Started',
+      answers: []
+    },
+    { 
+      quizId: 1, 
       studentRef: '21839316',
       score: 0,
       totalQuestions: 80,
-      warnings: 3,
-      submittedAt: '2024-03-23 14:20:00',
-      status: 'Terminated',
-      answers: Array(80).fill(null)
+      warnings: 0,
+      submittedAt: null,
+      status: 'Not Started',
+      answers: []
     },
     { 
       quizId: 1, 
-      quizTitle: 'CSM 153 - Circuit Theory',
       studentRef: '21875777',
-      score: 58,
+      score: 0,
       totalQuestions: 80,
       warnings: 0,
-      submittedAt: '2024-03-23 15:15:00',
-      status: 'Completed',
-      answers: Array(80).fill(null).map((_, i) => i < 32 ? Math.floor(Math.random() * 4) : null)
+      submittedAt: null,
+      status: 'Not Started',
+      answers: []
     },
     { 
       quizId: 1, 
-      quizTitle: 'CSM 153 - Circuit Theory',
       studentRef: '22041319',
-      score: 45,
+      score: 0,
       totalQuestions: 80,
-      warnings: 2,
-      submittedAt: '2024-03-23 14:50:00',
-      status: 'Completed',
-      answers: Array(80).fill(null).map((_, i) => i < 25 ? Math.floor(Math.random() * 4) : null)
+      warnings: 0,
+      submittedAt: null,
+      status: 'Not Started',
+      answers: []
     },
   ]);
 
@@ -113,12 +107,18 @@ export default function Admin({ onLogout, user }) {
     return student ? student.name : 'Unknown Student';
   };
 
-  // Calculate statistics
+  // Get student result by reference number
+  const getStudentResult = (refNum) => {
+    return quizResults.find(r => r.studentRef === refNum);
+  };
+
+  // Calculate statistics from quizResults
   const totalStudents = students.length;
   const completedExams = quizResults.filter(r => r.status === 'Completed').length;
   const terminatedExams = quizResults.filter(r => r.status === 'Terminated').length;
-  const averageScore = quizResults.length > 0 
-    ? (quizResults.reduce((acc, r) => acc + r.score, 0) / quizResults.length).toFixed(1)
+  const notStarted = quizResults.filter(r => r.status === 'Not Started').length;
+  const averageScore = completedExams > 0 
+    ? (quizResults.filter(r => r.status === 'Completed').reduce((acc, r) => acc + r.score, 0) / completedExams).toFixed(1)
     : 0;
 
   const handleViewStudent = (result) => {
@@ -126,36 +126,14 @@ export default function Admin({ onLogout, user }) {
     setShowStudentModal(true);
   };
 
-  const handleCreateQuiz = (e) => {
-    e.preventDefault();
-    const quiz = {
-      id: quizzes.length + 1,
-      title: newQuiz.title,
-      questions: parseInt(newQuiz.questions),
-      duration: parseInt(newQuiz.duration),
-      password: newQuiz.password,
-      examTime: newQuiz.examTime,
-      status: 'active'
-    };
-    setQuizzes([...quizzes, quiz]);
-    setShowCreateQuiz(false);
-    setNewQuiz({ title: '', questions: '', duration: '', password: '', examTime: '' });
-    alert('Quiz created successfully!');
-  };
-
   const handleDeleteQuiz = (id) => {
     if (window.confirm('Are you sure you want to delete this quiz?')) {
-      setQuizzes(quizzes.filter(q => q.id !== id));
+      // Quiz deletion logic
     }
   };
 
   const handleToggleQuiz = (id) => {
-    setQuizzes(quizzes.map(q => {
-      if (q.id === id) {
-        return { ...q, status: q.status === 'active' ? 'draft' : 'active' };
-      }
-      return q;
-    }));
+    // Toggle quiz status logic
   };
 
   return (
@@ -196,12 +174,6 @@ export default function Admin({ onLogout, user }) {
             Manage Quizzes
           </button>
           <button 
-            className={`admin-nav-btn ${activeTab === 'create' ? 'active' : ''}`}
-            onClick={() => setShowCreateQuiz(true)}
-          >
-            Create Quiz
-          </button>
-          <button 
             className="admin-nav-btn"
             onClick={onLogout}
             style={{ borderColor: '#ff4757', color: '#ff4757' }}
@@ -236,7 +208,17 @@ export default function Admin({ onLogout, user }) {
             textAlign: 'center'
           }}>
             <h3 style={{ color: '#2ed573', fontSize: '32px', margin: 0 }}>{completedExams}</h3>
-            <p style={{ color: '#a0a0b0', margin: '5px 0 0 0' }}>Completed Exams</p>
+            <p style={{ color: '#a0a0b0', margin: '5px 0 0 0' }}>Completed</p>
+          </div>
+          <div style={{
+            background: 'rgba(255, 222, 66, 0.1)',
+            border: '1px solid #FFDE42',
+            borderRadius: '8px',
+            padding: '20px',
+            textAlign: 'center'
+          }}>
+            <h3 style={{ color: '#FFDE42', fontSize: '32px', margin: 0 }}>{notStarted}</h3>
+            <p style={{ color: '#a0a0b0', margin: '5px 0 0 0' }}>Not Started</p>
           </div>
           <div style={{
             background: 'rgba(255, 71, 87, 0.1)',
@@ -247,16 +229,6 @@ export default function Admin({ onLogout, user }) {
           }}>
             <h3 style={{ color: '#ff4757', fontSize: '32px', margin: 0 }}>{terminatedExams}</h3>
             <p style={{ color: '#a0a0b0', margin: '5px 0 0 0' }}>Terminated</p>
-          </div>
-          <div style={{
-            background: 'rgba(255, 222, 66, 0.1)',
-            border: '1px solid #FFDE42',
-            borderRadius: '8px',
-            padding: '20px',
-            textAlign: 'center'
-          }}>
-            <h3 style={{ color: '#FFDE42', fontSize: '32px', margin: 0 }}>{averageScore}%</h3>
-            <p style={{ color: '#a0a0b0', margin: '5px 0 0 0' }}>Average Score</p>
           </div>
         </div>
 
@@ -297,7 +269,7 @@ export default function Admin({ onLogout, user }) {
                       <td style={{ padding: '15px', color: '#fff' }}>{getStudentName(result.studentRef)}</td>
                       <td style={{ padding: '15px', color: '#a0a0b0' }}>{result.studentRef}</td>
                       <td style={{ padding: '15px', textAlign: 'center', color: '#53CBF3', fontWeight: 'bold' }}>
-                        {result.score}/{result.totalQuestions} ({((result.score / result.totalQuestions) * 100).toFixed(1)}%)
+                        {result.score}/{result.totalQuestions} ({result.totalQuestions > 0 ? ((result.score / result.totalQuestions) * 100).toFixed(1) : 0}%)
                       </td>
                       <td style={{ 
                         padding: '15px', 
@@ -311,21 +283,26 @@ export default function Admin({ onLogout, user }) {
                         <span style={{
                           padding: '5px 10px',
                           borderRadius: '4px',
-                          background: result.status === 'Completed' ? 'rgba(46, 213, 115, 0.2)' : 'rgba(255, 71, 87, 0.2)',
-                          color: result.status === 'Completed' ? '#2ed573' : '#ff4757',
+                          background: result.status === 'Completed' ? 'rgba(46, 213, 115, 0.2)' : 
+                                     result.status === 'Terminated' ? 'rgba(255, 71, 87, 0.2)' :
+                                     'rgba(255, 222, 66, 0.2)',
+                          color: result.status === 'Completed' ? '#2ed573' : 
+                                result.status === 'Terminated' ? '#ff4757' : '#FFDE42',
                           fontSize: '12px'
                         }}>
                           {result.status}
                         </span>
                       </td>
                       <td style={{ padding: '15px', textAlign: 'center' }}>
-                        <button 
-                          className="quiz-action-btn"
-                          onClick={() => handleViewStudent(result)}
-                          style={{ padding: '5px 15px', fontSize: '12px' }}
-                        >
-                          View Details
-                        </button>
+                        {result.status !== 'Not Started' && (
+                          <button 
+                            className="quiz-action-btn"
+                            onClick={() => handleViewStudent(result)}
+                            style={{ padding: '5px 15px', fontSize: '12px' }}
+                          >
+                            View Details
+                          </button>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -343,21 +320,20 @@ export default function Admin({ onLogout, user }) {
             </h2>
             <div className="quiz-list" style={{ maxWidth: '800px', margin: '0 auto' }}>
               {students.map((student, index) => {
-                const studentResult = quizResults.find(r => r.studentRef === student.referenceNumber);
+                const studentResult = getStudentResult(student.referenceNumber);
                 return (
                   <div key={index} className="quiz-item" style={{ 
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
-                    cursor: 'pointer',
-                    pointerEvents: 'auto'
+                    cursor: 'pointer'
                   }}>
                     <div className="quiz-item-info">
                       <h3 style={{ color: '#53CBF3' }}>{student.name}</h3>
                       <p style={{ color: '#a0a0b0' }}>Reference: {student.referenceNumber}</p>
                     </div>
                     <div style={{ textAlign: 'right', display: 'flex', gap: '10px', alignItems: 'center' }}>
-                      {studentResult ? (
+                      {studentResult && studentResult.status !== 'Not Started' ? (
                         <>
                           <div>
                             <p style={{ 
@@ -425,12 +401,6 @@ export default function Admin({ onLogout, user }) {
                     >
                       {quiz.status === 'active' ? 'Deactivate' : 'Activate'}
                     </button>
-                    <button 
-                      className="quiz-action-btn danger"
-                      onClick={() => handleDeleteQuiz(quiz.id)}
-                    >
-                      Delete
-                    </button>
                   </div>
                 </div>
               ))}
@@ -438,8 +408,8 @@ export default function Admin({ onLogout, user }) {
           </div>
         )}
 
-        {/* Create Quiz Modal */}
-        {showCreateQuiz && (
+        {/* Student Details Modal */}
+        {showStudentModal && selectedStudent && (
           <div style={{
             position: 'fixed',
             top: 0,
@@ -458,44 +428,75 @@ export default function Admin({ onLogout, user }) {
               border: '2px solid #5478FF',
               borderRadius: '12px',
               padding: '30px',
-              maxWidth: '500px',
+              maxWidth: '700px',
               width: '100%',
               maxHeight: '90vh',
               overflow: 'auto'
             }}>
-              <h2 style={{ color: '#53CBF3', marginBottom: '20px', textAlign: 'center' }}>Create New Quiz</h2>
-              <form onSubmit={handleCreateQuiz}>
-                <div className="cyber-form-group">
-                  <label>Quiz Title</label>
-                  <input
-                    type="text"
-                    className="cyber-input"
-                    placeholder="e.g., CSM 153 - Circuit Theory"
-                    value={newQuiz.title}
-                    onChange={(e) => setNewQuiz({ ...newQuiz, title: e.target.value })}
-                    required
-                  />
+              <h2 style={{ color: '#53CBF3', marginBottom: '10px', textAlign: 'center' }}>
+                Student Result Details
+              </h2>
+              <div style={{ marginBottom: '20px', textAlign: 'center' }}>
+                <h3 style={{ color: '#fff', margin: 0 }}>{getStudentName(selectedStudent.studentRef)}</h3>
+                <p style={{ color: '#a0a0b0', margin: '5px 0' }}>Reference: {selectedStudent.studentRef}</p>
+              </div>
+              
+              <div style={{ 
+                display: 'grid',
+                gridTemplateColumns: 'repeat(2, 1fr)',
+                gap: '15px',
+                marginBottom: '20px'
+              }}>
+                <div style={{
+                  background: 'rgba(84, 120, 255, 0.1)',
+                  border: '1px solid #5478FF',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  textAlign: 'center'
+                }}>
+                  <h3 style={{ color: '#53CBF3', margin: 0, fontSize: '24px' }}>
+                    {selectedStudent.score}/{selectedStudent.totalQuestions}
+                  </h3>
+                  <p style={{ color: '#a0a0b0', margin: '5px 0 0 0' }}>Score</p>
                 </div>
-                <div className="cyber-form-group">
-                  <label>Number of Questions</label>
-                  <input
-                    type="number"
-                    className="cyber-input"
-                    placeholder="e.g., 80"
-                    value={newQuiz.questions}
-                    onChange={(e) => setNewQuiz({ ...newQuiz, questions: e.target.value })}
-                    required
-                    min="1"
-                  />
+                <div style={{
+                  background: 'rgba(46, 213, 115, 0.1)',
+                  border: '1px solid #2ed573',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  textAlign: 'center'
+                }}>
+                  <h3 style={{ color: '#2ed573', margin: 0, fontSize: '24px' }}>
+                    {selectedStudent.totalQuestions > 0 ? ((selectedStudent.score / selectedStudent.totalQuestions) * 100).toFixed(1) : 0}%
+                  </h3>
+                  <p style={{ color: '#a0a0b0', margin: '5px 0 0 0' }}>Percentage</p>
                 </div>
-                <div className="cyber-form-group">
-                  <label>Duration (minutes)</label>
-                  <input
-                    type="number"
-                    className="cyber-input"
-                    placeholder="e.g., 120"
-                    value={newQuiz.duration}
-                    onChange={(e) => setNewQuiz({ ...newQuiz, duration: e.target.value })}
+                <div style={{
+                  background: 'rgba(255, 222, 66, 0.1)',
+                  border: '1px solid #FFDE42',
+                  borderRadius: '8px',
+                  padding: '15px',
+                  textAlign: 'center'
+                }}>
+                  <h3 style={{ color: '#FFDE42', margin: 0, fontSize: '24px' }}>
+                    {selectedStudent.warnings}/3
+                  </h3>
+                  <p style={{ color: '#a0a0b0', margin: '5px 0 0 0' }}>Warnings</p>
+                </div>
+                <div style={{
+                  background: selectedStudent.status === 'Completed' 
+                    ? 'rgba(46, 213, 115, 0.1)' 
+                    : selectedStudent.status === 'Terminated'
+                    ? 'rgba(255, 71, 87, 0.1)'
+                    : 'rgba(255, 222, 66, 0.1)',
+                  border: `1px solid ${selectedStudent.status === 'Completed' ? '#2ed573' : selectedStudent.status === 'Terminated' ? '#ff4757' : '#FFDE42'}`,
+                  borderRadius: '8px',
+                  padding: '15px',
+                  textAlign: 'center'
+                }}>
+                  <h3 style={{ 
+                    color: selectedStudent.status === 'Completed' ? '#2ed573' : selectedStudent.status === 'Terminated' ? '#ff4757' : '#FFDE42',
+                    margin: 0, 
                     required
                     min="1"
                   />
