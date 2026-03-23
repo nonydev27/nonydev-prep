@@ -604,3 +604,262 @@ body {
 .mt-20 { margin-top: 20px; }
 .mb-20 { margin-bottom: 20px; }
 .d-none { display: none; }
+
+/* ============================================
+   RESPONSIVE DESIGN FOR MOBILE DEVICES
+   ============================================ */
+
+/* Tablet and below */
+@media (max-width: 768px) {
+  .cyber-card {
+    padding: 30px 20px;
+    margin: 10px;
+  }
+  
+  .cyber-card h2 {
+    font-size: 20px;
+    letter-spacing: 1px;
+  }
+  
+  .cyber-timer {
+    font-size: 18px;
+    padding: 10px 15px;
+    top: 10px;
+    right: 10px;
+  }
+  
+  .admin-header h1 {
+    font-size: 24px;
+    letter-spacing: 2px;
+  }
+  
+  .quiz-item {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .quiz-item-actions {
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .quiz-action-btn {
+    flex: 1;
+  }
+  
+  .quiz-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .admin-nav {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .admin-nav-btn {
+    text-align: center;
+  }
+  
+  .cyber-timer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    border-radius: 0;
+    font-size: 20px;
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .question-card {
+    padding: 20px 15px;
+  }
+  
+  .answer-options {
+    gap: 10px;
+  }
+  
+  .answer-option {
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+  
+  .cyber-btn {
+    padding: 14px;
+    font-size: 14px;
+  }
+  
+  .quiz-container {
+    padding: 80px 15px 20px;
+  }
+  
+  .password-modal-content {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+  
+  .cyber-alert-box {
+    margin: 20px;
+    padding: 30px 20px;
+  }
+  
+  .cyber-alert-box h3 {
+    font-size: 22px;
+  }
+  
+  .admin-container {
+    padding: 20px 15px;
+  }
+  
+  .cyber-container {
+    padding: 15px;
+    align-items: flex-start;
+    padding-top: 40px;
+  }
+  
+  .admin-header {
+    margin-bottom: 25px;
+  }
+  
+  .quiz-list {
+    padding: 0 5px;
+  }
+}
+
+/* Extra small screens (phones) */
+@media (max-width: 480px) {
+  .cyber-card h2 {
+    font-size: 18px;
+    letter-spacing: 1px;
+  }
+  
+  .admin-header h1 {
+    font-size: 20px;
+  }
+  
+  .quiz-title {
+    font-size: 18px;
+  }
+  
+  .question-card h3 {
+    font-size: 16px;
+  }
+  
+  .cyber-form-group label {
+    font-size: 12px;
+  }
+  
+  .cyber-input {
+    padding: 12px 14px;
+    font-size: 14px;
+  }
+  
+  .quiz-item-info h3 {
+    font-size: 16px;
+  }
+  
+  .quiz-item-info p {
+    font-size: 12px;
+  }
+  
+  .cyber-timer {
+    font-size: 18px;
+    padding: 12px;
+  }
+  
+  .quiz-container {
+    padding: 70px 10px 15px;
+  }
+}
+
+/* Touch-friendly buttons for mobile */
+@media (hover: none) and (pointer: coarse) {
+  .cyber-btn,
+  .quiz-action-btn,
+  .admin-nav-btn {
+    padding: 16px 20px;
+    min-height: 48px;
+  }
+  
+  .answer-option {
+    padding: 16px 14px;
+    min-height: 56px;
+  }
+  
+  .answer-option-marker {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  
+  .cyber-input {
+    min-height: 48px;
+  }
+}
+
+/* Ensure proper scrolling on mobile */
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  -webkit-overflow-scrolling: touch;
+  overflow-x: hidden;
+}
+
+/* Prevent text selection issues on mobile */
+.cyber-btn,
+.quiz-action-btn,
+.answer-option {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+  user-select: none;
+}
+
+/* Better input handling on mobile - prevents zoom on focus */
+input, button, select, textarea {
+  font-size: 16px !important;
+}
+
+/* Make forms scrollable on small screens */
+.cyber-card {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+/* Improve quiz navigation on mobile */
+.quiz-navigation-dots {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 0;
+}
+
+.quiz-navigation-dots > div {
+  width: 28px !important;
+  height: 28px !important;
+  font-size: 11px !important;
+}
+
+/* Landscape orientation adjustments */
+@media (max-height: 500px) and (orientation: landscape) {
+  .cyber-timer {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    padding: 8px 12px;
+    font-size: 16px;
+  }
+  
+  .quiz-container {
+    padding-top: 50px;
+  }
+  
+  .cyber-card {
+    max-height: 95vh;
+  }
+}

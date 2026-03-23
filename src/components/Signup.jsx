@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 export default function Signup({ onSignup, onSwitchToLogin }) {
   const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+  const [referenceNumber, setReferenceNumber] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
@@ -11,7 +11,7 @@ export default function Signup({ onSignup, onSwitchToLogin }) {
     e.preventDefault();
     setError('');
 
-    if (!name || !email || !password || !confirmPassword) {
+    if (!name || !referenceNumber || !password || !confirmPassword) {
       setError('Please fill in all fields');
       return;
     }
@@ -27,14 +27,22 @@ export default function Signup({ onSignup, onSwitchToLogin }) {
     }
 
     // Mock signup - in real app, this would call an API
-    onSignup({ name, email, role: 'student' });
+    // Store reference number with user data for login lookup
+    onSignup({ 
+      name, 
+      referenceNumber: referenceNumber.toUpperCase(), 
+      role: 'student' 
+    });
   };
 
   return (
     <div className="cyber-bg" style={{ position: 'fixed', inset: 0, zIndex: -1 }}>
       <div className="cyber-container" style={{ position: 'relative', zIndex: 1 }}>
         <div className="cyber-card" style={{ position: 'relative', zIndex: 1, pointerEvents: 'auto' }}>
-          <h2>Cyber Register</h2>
+          <h2>Student Registration</h2>
+          <p style={{ color: '#a0a0b0', marginBottom: '20px', textAlign: 'center' }}>
+            Register for Circuit Theory Exam
+          </p>
           
           {error && (
             <div style={{ 
@@ -65,15 +73,16 @@ export default function Signup({ onSignup, onSwitchToLogin }) {
             </div>
 
             <div className="cyber-form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="referenceNumber">Reference Number</label>
               <input
-                type="email"
-                id="email"
+                type="text"
+                id="referenceNumber"
                 className="cyber-input"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
+                placeholder="Enter your reference number"
+                value={referenceNumber}
+                onChange={(e) => setReferenceNumber(e.target.value)}
+                autoComplete="username"
+                style={{ textTransform: 'uppercase' }}
               />
             </div>
 

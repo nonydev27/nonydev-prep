@@ -1,34 +1,83 @@
 import { useState } from 'react';
 
 export default function Login({ onLogin, onSwitchToSignup }) {
-  const [email, setEmail] = useState('');
+  const [referenceNumber, setReferenceNumber] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+
+  // Registered students database with reference numbers
+  const registeredStudents = {
+    '22479389': 'Adu Boahen Jerry Nana Yao',
+    '22391240': 'Dekyi Cheryl Saah',
+    '21855561': 'Agyeman Nana Yaw',
+    '21839316': 'Benniton Otumfuo-Nyarko',
+    '21875777': 'Memunatu Lukman',
+
+  };
+
+  // Default password for all students
+  const DEFAULT_PASSWORD = '12345';
 
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
 
-    if (!email || !password) {
+    if (!referenceNumber || !password) {
       setError('Please fill in all fields');
       return;
     }
 
-    // Mock authentication - in real app, this would call an API
-    if (email === 'admin@cyberquiz.com' && password === 'admin123') {
-      onLogin({ email, role: 'admin' });
-    } else if (email && password) {
-      onLogin({ email, role: 'student' });
+    const refNum = referenceNumber.toUpperCase().trim();
+    
+    // Check if student is registered
+    if (registeredStudents[refNum]) {
+      const studentName = registeredStudents[refNum];
+      if (password === DEFAULT_PASSWORD) {
+        onLogin({ 
+          referenceNumber: refNum, 
+          name: studentName, 
+          role: 'student' 
+        });
+      } else {
+        setError('Invalid password. Please try again.');
+      }
     } else {
-      setError('Invalid credentials');
+      // Check for admin login
+      if (refNum === 'ADMIN' && password === 'admin123') {
+        onLogin({ referenceNumber: 'ADMIN', name: 'Administrator', role: 'admin' });
+      } else {
+        setError('Reference number not found. Please register first.');
+      }
     }
   };
 
   return (
-    <div className="cyber-bg" style={{ position: 'fixed', inset: 0, zIndex: -1 }}>
-      <div className="cyber-container" style={{ position: 'relative', zIndex: 1 }}>
-        <div className="cyber-card" style={{ position: 'relative', zIndex: 1, pointerEvents: 'auto' }}>
-          <h2>Cyber Login</h2>
+    <div className="cyber-bg" style={{ 
+      position: 'fixed', 
+      inset: 0, 
+      zIndex: -1,
+      overflow: 'auto'
+    }}>
+      <div className="cyber-container" style={{ 
+        position: 'relative', 
+        zIndex: 1,
+        minHeight: '100vh',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}>
+        <div className="cyber-card" style={{ 
+          position: 'relative', 
+          zIndex: 1, 
+          pointerEvents: 'auto',
+          width: '100%',
+          maxWidth: '420px'
+        }}>
+          <h2>CSM 153 / EE287 - Circuit Theory Exam</h2>
+          <p style={{ color: '#a0a0b0', marginBottom: '20px', textAlign: 'center' }}>
+            Login to access your exam
+          </p>
           
           {error && (
             <div style={{ 
@@ -46,15 +95,16 @@ export default function Login({ onLogin, onSwitchToSignup }) {
 
           <form onSubmit={handleSubmit}>
             <div className="cyber-form-group">
-              <label htmlFor="email">Email Address</label>
+              <label htmlFor="referenceNumber">Reference Number</label>
               <input
-                type="email"
-                id="email"
+                type="text"
+                id="referenceNumber"
                 className="cyber-input"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                autoComplete="email"
+                placeholder="Enter your reference number"
+                value={referenceNumber}
+                onChange={(e) => setReferenceNumber(e.target.value)}
+                autoComplete="username"
+                style={{ textTransform: 'uppercase' }}
               />
             </div>
 
@@ -71,8 +121,8 @@ export default function Login({ onLogin, onSwitchToSignup }) {
               />
             </div>
 
-            <button type="submit" className="cyber-btn">
-              Access System
+            <button type="submit" className="cyber-btn" style={{ width: '100%' }}>
+              Access Exam
             </button>
           </form>
 
