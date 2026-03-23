@@ -12,16 +12,11 @@ export default function Login({ onLogin }) {
     '21855561': 'Agyeman Nana Yaw',
     '21839316': 'Benniton Otumfuo-Nyarko',
     '21875777': 'Memunatu Lukman',
-    '22041319' : 'Osei Prempeh Erica',
+    '22041319': 'Osei Prempeh Erica',
   };
 
   // Default password for all students
   const DEFAULT_PASSWORD = '12345';
-   const ADU_PASSWORD = '';
-  const DEK_PASSWORD = '';
-  const AGY_PASSWORD = '';
-  const BEN_PASSWORD = '';
-  const MEM_PASSWORD = '';
 
   const handleSubmit = (e) => {
     e.preventDefault();

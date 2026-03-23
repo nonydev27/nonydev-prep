@@ -11,10 +11,12 @@ export default function Quiz({ onLogout, user }) {
   const [answers, setAnswers] = useState({});
   const [showCheatAlert, setShowCheatAlert] = useState(false);
   const [cheatAlertMessage, setCheatAlertMessage] = useState('');
+  const [cheatCount, setCheatCount] = useState(0);
+  const [showFinalAlert, setShowFinalAlert] = useState(false);
 
   // Circuit Theory Quiz Data - All 80 Questions
   const quizData = {
-    title: 'CSM 153 - Circuit Theory',
+    title: 'CSM 153 / EE287 - Circuit Theory',
     duration: 120,
     questions: [
       // Part 1: Fundamentals & DC Analysis (Questions 1-10)
@@ -27,7 +29,7 @@ export default function Quiz({ onLogout, user }) {
       { id: 7, text: 'In a series circuit, which parameter remains constant across all components?', options: ['A) Voltage', 'B) Power', 'C) Current', 'D) Resistance'], correct: 2 },
       { id: 8, text: 'In a parallel circuit, which parameter remains constant across all branches?', options: ['A) Current', 'B) Voltage', 'C) Resistance', 'D) Energy'], correct: 1 },
       { id: 9, text: 'The unit of conductance is:', options: ['A) Ohm', 'B) Siemens (or Mho)', 'C) Henry', 'D) Farad'], correct: 1 },
-      { id: 10, text: 'Power in a DC circuit is calculated as:', options: ['A) P = V / I', 'B) P = I² × R', 'C) P = V² × R', 'D) P = R / V'], correct: 1 },
+      { id: 10, text: 'Power in a DC circuit is calculated as:', options: ['A) P = V / I', 'B) P = I squared x R', 'C) P = V squared x R', 'D) P = R / V'], correct: 1 },
 
       // Part 2: Nodal & Mesh Analysis (Questions 11-20)
       { id: 11, text: 'Nodal analysis is based primarily on:', options: ['A) KVL', 'B) KCL', 'C) Faraday\'s Law', 'D) Thevenin\'s Theorem'], correct: 1 },
@@ -51,16 +53,16 @@ export default function Quiz({ onLogout, user }) {
       { id: 27, text: 'Self-inductance is measured in:', options: ['A) Farads', 'B) Ohms', 'C) Henrys', 'D) Webers'], correct: 2 },
       { id: 28, text: 'What happens to the inductance of a coil if the number of turns is doubled?', options: ['A) It doubles', 'B) It stays the same', 'C) It quadruples', 'D) It is halved'], correct: 2 },
       { id: 29, text: 'Hysteresis is a phenomenon found in:', options: ['A) Resistors', 'B) Capacitors', 'C) Magnetic materials', 'D) Ideal wires'], correct: 2 },
-      { id: 30, text: 'The force on a current-carrying conductor in a magnetic field is given by:', options: ['A) F = B × I × L × sin(θ)', 'B) F = V × I', 'C) F = m × a', 'D) F = B × A'], correct: 0 },
+      { id: 30, text: 'The force on a current-carrying conductor in a magnetic field is given by:', options: ['A) F = B x I x L x sin(theta)', 'B) F = V x I', 'C) F = m x a', 'D) F = B x A'], correct: 0 },
 
       // Part 4: AC Theory & Sinusoids (Questions 31-40)
       { id: 31, text: 'The frequency of a DC signal is:', options: ['A) 50 Hz', 'B) 60 Hz', 'C) 0 Hz', 'D) Infinite'], correct: 2 },
-      { id: 32, text: 'For a standard sine wave, the RMS value is equal to:', options: ['A) 0.707 × Vpeak', 'B) 0.637 × Vpeak', 'C) 1.414 × Vpeak', 'D) Vpeak / 2'], correct: 0 },
+      { id: 32, text: 'For a standard sine wave, the RMS value is equal to:', options: ['A) 0.707 x Vpeak', 'B) 0.637 x Vpeak', 'C) 1.414 x Vpeak', 'D) Vpeak / 2'], correct: 0 },
       { id: 33, text: 'Reactance (XL) of an inductor ________ as frequency increases.', options: ['A) Decreases', 'B) Increases', 'C) Stays constant', 'D) Drops to zero'], correct: 1 },
       { id: 34, text: 'Reactance (XC) of a capacitor ________ as frequency increases.', options: ['A) Decreases', 'B) Increases', 'C) Stays constant', 'D) Becomes infinite'], correct: 0 },
-      { id: 35, text: 'In a purely resistive AC circuit, the phase angle between voltage and current is:', options: ['A) 90°', 'B) 180°', 'C) 0°', 'D) 45°'], correct: 2 },
-      { id: 36, text: 'In a purely inductive circuit, the current ________ the voltage by 90°.', options: ['A) Leads', 'B) Lags', 'C) Is in phase with', 'D) Opposes'], correct: 1 },
-      { id: 37, text: 'In a purely capacitive circuit, the current ________ the voltage by 90°.', options: ['A) Leads', 'B) Lags', 'C) Is in phase with', 'D) Opposes'], correct: 0 },
+      { id: 35, text: 'In a purely resistive AC circuit, the phase angle between voltage and current is:', options: ['A) 90 degrees', 'B) 180 degrees', 'C) 0 degrees', 'D) 45 degrees'], correct: 2 },
+      { id: 36, text: 'In a purely inductive circuit, the current ________ the voltage by 90 degrees.', options: ['A) Leads', 'B) Lags', 'C) Is in phase with', 'D) Opposes'], correct: 1 },
+      { id: 37, text: 'In a purely capacitive circuit, the current ________ the voltage by 90 degrees.', options: ['A) Leads', 'B) Lags', 'C) Is in phase with', 'D) Opposes'], correct: 0 },
       { id: 38, text: 'Impedance (Z) is the combination of:', options: ['A) Resistance and Conductance', 'B) Resistance and Reactance', 'C) Voltage and Current', 'D) Power and Energy'], correct: 1 },
       { id: 39, text: 'The unit of Apparent Power is:', options: ['A) Watts (W)', 'B) Volt-Amps (VA)', 'C) Volt-Amps Reactive (VAR)', 'D) Joules (J)'], correct: 1 },
       { id: 40, text: 'The Power Factor is defined as the ratio of:', options: ['A) Apparent Power to Real Power', 'B) Real Power to Apparent Power', 'C) Reactive Power to Real Power', 'D) Voltage to Current'], correct: 1 },
@@ -80,13 +82,13 @@ export default function Quiz({ onLogout, user }) {
       // Part 6: Transients & Storage Elements (Questions 51-60)
       { id: 51, text: 'A capacitor stores energy in its:', options: ['A) Magnetic field', 'B) Electric field', 'C) Resistor', 'D) Dielectric heat'], correct: 1 },
       { id: 52, text: 'An inductor stores energy in its:', options: ['A) Electric field', 'B) Magnetic field', 'C) Core material', 'D) Terminals'], correct: 1 },
-      { id: 53, text: 'The time constant (τ) of an RC circuit is:', options: ['A) R / C', 'B) C / R', 'C) R × C', 'D) 1 / (RC)'], correct: 2 },
-      { id: 54, text: 'The time constant (τ) of an RL circuit is:', options: ['A) R × L', 'B) L / R', 'C) R / L', 'D) 1 / (RL)'], correct: 1 },
+      { id: 53, text: 'The time constant (tau) of an RC circuit is:', options: ['A) R / C', 'B) C / R', 'C) R x C', 'D) 1 / (RC)'], correct: 2 },
+      { id: 54, text: 'The time constant (tau) of an RL circuit is:', options: ['A) R x L', 'B) L / R', 'C) R / L', 'D) 1 / (RL)'], correct: 1 },
       { id: 55, text: 'After how many time constants is a capacitor considered fully charged?', options: ['A) 1', 'B) 3', 'C) 5', 'D) 10'], correct: 2 },
       { id: 56, text: 'In the steady state (DC), a capacitor acts as an:', options: ['A) Short circuit', 'B) Open circuit', 'C) Voltage source', 'D) Resistor'], correct: 1 },
       { id: 57, text: 'In the steady state (DC), an inductor acts as a:', options: ['A) Short circuit', 'B) Open circuit', 'C) Current source', 'D) Capacitor'], correct: 0 },
-      { id: 58, text: 'The energy stored in a capacitor is given by:', options: ['A) ½ × C × V²', 'B) ½ × L × I²', 'C) V × I × t', 'D) I² × R'], correct: 0 },
-      { id: 59, text: 'The energy stored in an inductor is given by:', options: ['A) ½ × C × V²', 'B) ½ × L × I²', 'C) V × I × t', 'D) L × I'], correct: 1 },
+      { id: 58, text: 'The energy stored in a capacitor is given by:', options: ['A) 1/2 x C x V squared', 'B) 1/2 x L x I squared', 'C) V x I x t', 'D) I squared x R'], correct: 0 },
+      { id: 59, text: 'The energy stored in an inductor is given by:', options: ['A) 1/2 x C x V squared', 'B) 1/2 x L x I squared', 'C) V x I x t', 'D) L x I'], correct: 1 },
       { id: 60, text: 'The voltage across a capacitor cannot change:', options: ['A) Gradually', 'B) Periodically', 'C) Instantaneously', 'D) At all'], correct: 2 },
 
       // Part 7: Mixed Theory & Application (Questions 61-70)
@@ -96,7 +98,7 @@ export default function Quiz({ onLogout, user }) {
       { id: 64, text: 'A bilateral element is one that:', options: ['A) Only allows current in one direction', 'B) Has different properties in different directions', 'C) Performs the same regardless of current direction', 'D) Has two terminals only'], correct: 2 },
       { id: 65, text: 'Which of the following is a non-linear element?', options: ['A) Resistor', 'B) Diode', 'C) Inductor', 'D) Capacitor'], correct: 1 },
       { id: 66, text: 'The unit of frequency is:', options: ['A) Seconds', 'B) Hertz', 'C) Radians', 'D) Teslas'], correct: 1 },
-      { id: 67, text: 'Angular frequency (ω) is equal to:', options: ['A) 2 × π × f', 'B) f / (2 × π)', 'C) 1 / f', 'D) 2 × f'], correct: 0 },
+      { id: 67, text: 'Angular frequency (omega) is equal to:', options: ['A) 2 x pi x f', 'B) f / (2 x pi)', 'C) 1 / f', 'D) 2 x f'], correct: 0 },
       { id: 68, text: 'Real power is measured in:', options: ['A) VA', 'B) VAR', 'C) Watts', 'D) Ohms'], correct: 2 },
       { id: 69, text: 'A lagging power factor implies the load is primarily:', options: ['A) Resistive', 'B) Inductive', 'C) Capacitive', 'D) Non-linear'], correct: 1 },
       { id: 70, text: 'A leading power factor implies the load is primarily:', options: ['A) Resistive', 'B) Inductive', 'C) Capacitive', 'D) Superconducting'], correct: 2 },
@@ -104,7 +106,7 @@ export default function Quiz({ onLogout, user }) {
       // Part 8: Final Review & Safety (Questions 71-80)
       { id: 71, text: 'Double insulation is a safety feature used to prevent:', options: ['A) Short circuits', 'B) Electric shock', 'C) Overheating', 'D) High electricity bills'], correct: 1 },
       { id: 72, text: 'A fuse is always connected in ________ with the circuit it protects.', options: ['A) Parallel', 'B) Series', 'C) Delta', 'D) Star'], correct: 1 },
-      { id: 73, text: 'In a 3-phase system, the phases are separated by:', options: ['A) 90°', 'B) 180°', 'C) 120°', 'D) 360°'], correct: 2 },
+      { id: 73, text: 'In a 3-phase system, the phases are separated by:', options: ['A) 90 degrees', 'B) 180 degrees', 'C) 120 degrees', 'D) 360 degrees'], correct: 2 },
       { id: 74, text: 'The "neutral" wire in a domestic circuit is usually at what potential?', options: ['A) 240 V', 'B) 110 V', 'C) 0 V (Ground)', 'D) -240 V'], correct: 2 },
       { id: 75, text: 'What instrument measures electrical energy consumption?', options: ['A) Voltmeter', 'B) Wattmeter', 'C) Energy meter (kWh meter)', 'D) Galvanometer'], correct: 2 },
       { id: 76, text: 'Susceptance is the imaginary part of:', options: ['A) Impedance', 'B) Admittance', 'C) Reactance', 'D) Resistance'], correct: 1 },
@@ -115,39 +117,46 @@ export default function Quiz({ onLogout, user }) {
     ]
   };
 
+  // Function to increment cheat count and auto-end if exceeds 3
+  const incrementCheatCount = (message) => {
+    const newCount = cheatCount + 1;
+    setCheatCount(newCount);
+    setCheatAlertMessage(`${message} (Warning ${newCount}/3)`);
+    setShowCheatAlert(true);
+    
+    if (newCount >= 3) {
+      setShowFinalAlert(true);
+    }
+  };
+
   // Anti-cheating: Disable specific keyboard shortcuts
   useEffect(() => {
+    if (!quizStarted) return;
+    
     const handleKeyDown = (e) => {
-      if (!quizStarted) return;
-      
       if (e.ctrlKey && e.key === 'p') {
         e.preventDefault();
-        triggerCheatAlert('Printing is disabled during the exam!');
+        incrementCheatCount('Printing is disabled during the exam!');
         return false;
       }
       if (e.ctrlKey && e.key === 'c') {
         e.preventDefault();
-        triggerCheatAlert('Copying is disabled during the exam!');
+        incrementCheatCount('Copying is disabled during the exam!');
         return false;
       }
       if (e.ctrlKey && e.key === 's') {
         e.preventDefault();
-        triggerCheatAlert('Saving is disabled during the exam!');
+        incrementCheatCount('Saving is disabled during the exam!');
         return false;
       }
       if (e.ctrlKey && e.key === 'u') {
         e.preventDefault();
-        triggerCheatAlert('View source is disabled during the exam!');
+        incrementCheatCount('View source is disabled during the exam!');
         return false;
       }
       if (e.key === 'F12') {
         e.preventDefault();
-        triggerCheatAlert('Developer tools are disabled during the exam!');
-        return false;
-      }
-      if (e.button === 2) {
-        e.preventDefault();
-        triggerCheatAlert('Right-click is disabled during the exam!');
+        incrementCheatCount('Developer tools are disabled during the exam!');
         return false;
       }
     };
@@ -155,7 +164,7 @@ export default function Quiz({ onLogout, user }) {
     const handleContextMenu = (e) => {
       if (quizStarted) {
         e.preventDefault();
-        triggerCheatAlert('Right-click is disabled during the exam!');
+        incrementCheatCount('Right-click is disabled during the exam!');
         return false;
       }
     };
@@ -167,7 +176,7 @@ export default function Quiz({ onLogout, user }) {
       document.removeEventListener('keydown', handleKeyDown);
       document.removeEventListener('contextmenu', handleContextMenu);
     };
-  }, [quizStarted]);
+  }, [quizStarted, cheatCount]);
 
   // Anti-cheating: Detect when user tries to leave the site
   useEffect(() => {
@@ -180,7 +189,7 @@ export default function Quiz({ onLogout, user }) {
 
     const handleVisibilityChange = () => {
       if (document.hidden && quizStarted) {
-        setShowExitAlert(true);
+        incrementCheatCount('You are not allowed to leave the exam page!');
       }
     };
 
@@ -191,7 +200,7 @@ export default function Quiz({ onLogout, user }) {
       window.removeEventListener('beforeunload', handleBeforeUnload);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
-  }, [quizStarted]);
+  }, [quizStarted, cheatCount]);
 
   // Timer countdown
   useEffect(() => {
@@ -265,30 +274,31 @@ export default function Quiz({ onLogout, user }) {
     const answered = Object.keys(answers).length;
     const unanswered = quizData.questions.length - answered;
     
-    const confirmed = window.confirm(
+    alert(
       `Exam Summary:\n\n` +
       `Questions Answered: ${answered}/${quizData.questions.length}\n` +
       `Questions Unanswered: ${unanswered}\n` +
+      `Cheating Warnings: ${cheatCount}/3\n` +
       `Estimated Score: ${score}/${quizData.questions.length}\n\n` +
-      `Are you sure you want to submit your exam?`
+      `Exam has been submitted.`
     );
-    
-    if (confirmed) {
-      alert(`Exam submitted successfully!\n\nYour estimated score: ${score}/${quizData.questions.length}`);
-      onLogout();
-    }
+    onLogout();
   };
 
   const currentQ = quizData.questions[currentQuestion];
   const displayName = user?.name || user?.referenceNumber || 'Student';
 
   return (
-    <div className="cyber-bg" style={{ position: 'fixed', inset: 0, zIndex: -1 }}>
+    <div className="cyber-bg" style={{ 
+      position: 'relative', 
+      minHeight: '100vh',
+      zIndex: -1
+    }}>
       {/* Password Modal */}
       {showPasswordModal && (
         <div className="password-modal">
           <div className="password-modal-content">
-            <h3>🔒 Enter Exam Password</h3>
+            <h3>Enter Exam Password</h3>
             <p style={{ color: '#a0a0b0', marginBottom: '20px' }}>
               You have <strong>2 hours (120 minutes)</strong> to complete this exam.
             </p>
@@ -318,8 +328,11 @@ export default function Quiz({ onLogout, user }) {
       {showCheatAlert && (
         <div className="cyber-alert" onClick={() => setShowCheatAlert(false)}>
           <div className="cyber-alert-box" onClick={e => e.stopPropagation()}>
-            <h3>⚠️ Warning!</h3>
+            <h3>Warning! ({cheatCount}/3)</h3>
             <p>{cheatAlertMessage}</p>
+            <p style={{ color: '#ff4757', marginTop: '10px' }}>
+              {3 - cheatCount} warning(s) remaining before exam is terminated.
+            </p>
             <button 
               className="cyber-btn" 
               onClick={() => setShowCheatAlert(false)}
@@ -330,11 +343,34 @@ export default function Quiz({ onLogout, user }) {
         </div>
       )}
 
+      {/* Final Alert - Quiz Terminated */}
+      {showFinalAlert && (
+        <div className="cyber-alert">
+          <div className="cyber-alert-box" style={{ borderColor: '#ff4757' }}>
+            <h3>EXAM TERMINATED!</h3>
+            <p>You have exceeded the maximum number of warnings (3).</p>
+            <p style={{ color: '#ff4757', marginTop: '15px' }}>
+              Your exam has been automatically submitted due to academic dishonesty.
+            </p>
+            <button 
+              className="cyber-btn" 
+              onClick={() => {
+                setShowFinalAlert(false);
+                handleSubmitQuiz();
+              }}
+              style={{ background: '#ff4757', marginTop: '20px' }}
+            >
+              Exit Exam
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Exit Alert */}
       {showExitAlert && quizStarted && (
         <div className="cyber-alert">
           <div className="cyber-alert-box">
-            <h3>⚠️ Cheating Alert!</h3>
+            <h3>Warning! ({cheatCount}/3)</h3>
             <p>You are not allowed to leave the exam page!</p>
             <button 
               className="cyber-btn" 
@@ -349,7 +385,7 @@ export default function Quiz({ onLogout, user }) {
       {/* Timer */}
       {quizStarted && (
         <div className={`cyber-timer ${timeLeft < 300 ? 'warning' : ''}`}>
-          ⏱️ Time Remaining: {formatTime(timeLeft)}
+          Time: {formatTime(timeLeft)} | Warnings: {cheatCount}/3
         </div>
       )}
 
@@ -369,7 +405,13 @@ export default function Quiz({ onLogout, user }) {
 
       {/* Quiz Content */}
       {quizStarted && (
-        <div className="quiz-container" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="quiz-container" style={{ 
+          position: 'relative', 
+          zIndex: 1,
+          padding: '80px 20px 40px',
+          maxWidth: '800px',
+          margin: '0 auto'
+        }}>
           <div className="quiz-header">
             <div className="quiz-title">{quizData.title}</div>
             <div className="quiz-progress">
@@ -401,32 +443,38 @@ export default function Quiz({ onLogout, user }) {
             </div>
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px' }}>
+          {/* Navigation Buttons */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', gap: '20px', marginBottom: '20px' }}>
             <button 
               className="cyber-btn cyber-btn-secondary"
               onClick={handlePrevQuestion}
               disabled={currentQuestion === 0}
-              style={{ opacity: currentQuestion === 0 ? 0.5 : 1 }}
+              style={{ opacity: currentQuestion === 0 ? 0.5 : 1, width: 'auto', padding: '12px 24px' }}
             >
               Previous
             </button>
 
+            <button 
+              className="cyber-btn cyber-btn-secondary"
+              onClick={handleNextQuestion}
+              disabled={currentQuestion === quizData.questions.length - 1}
+              style={{ opacity: currentQuestion === quizData.questions.length - 1 ? 0.5 : 1, width: 'auto', padding: '12px 24px' }}
+            >
+              Next
+            </button>
+          </div>
+
+          {/* Submit Button */}
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
             {currentQuestion === quizData.questions.length - 1 ? (
               <button 
                 className="cyber-btn"
                 onClick={handleSubmitQuiz}
-                style={{ background: 'linear-gradient(135deg, #2ed573, #1e8449)' }}
+                style={{ background: 'linear-gradient(135deg, #2ed573, #1e8449)', width: '100%' }}
               >
                 Submit Exam
               </button>
-            ) : (
-              <button 
-                className="cyber-btn"
-                onClick={handleNextQuestion}
-              >
-                Next Question
-              </button>
-            )}
+            ) : null}
           </div>
 
           {/* Question Navigation Dots */}
@@ -434,10 +482,10 @@ export default function Quiz({ onLogout, user }) {
             display: 'flex', 
             justifyContent: 'center', 
             gap: '8px', 
-            marginTop: '30px',
             flexWrap: 'wrap',
             maxWidth: '800px',
-            margin: '30px auto 0'
+            margin: '0 auto',
+            paddingBottom: '40px'
           }}>
             {quizData.questions.map((_, idx) => (
               <div
@@ -464,6 +512,29 @@ export default function Quiz({ onLogout, user }) {
                 {idx + 1}
               </div>
             ))}
+          </div>
+
+          {/* Question Jump Select */}
+          <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+            <label style={{ color: '#a0a0b0', marginRight: '10px' }}>Go to Question:</label>
+            <select 
+              value={currentQuestion}
+              onChange={(e) => setCurrentQuestion(Number(e.target.value))}
+              style={{
+                background: 'rgba(0, 0, 0, 0.3)',
+                border: '1px solid #5478FF',
+                borderRadius: '4px',
+                color: '#ffffff',
+                padding: '8px 12px',
+                cursor: 'pointer'
+              }}
+            >
+              {quizData.questions.map((_, idx) => (
+                <option key={idx} value={idx}>
+                  Question {idx + 1}{answers[idx] !== undefined ? ' (Answered)' : ''}
+                </option>
+              ))}
+            </select>
           </div>
         </div>
       )}

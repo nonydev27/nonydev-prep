@@ -45,7 +45,7 @@ body {
     radial-gradient(ellipse at 50% 0%, rgba(17, 31, 162, 0.4) 0%, transparent 70%);
   background-size: 50px 50px, 50px 50px, 100% 100%;
   z-index: -1;
-  pointer-events: none;
+  pointer-events: none !important;
 }
 
 .cyber-bg::before {
@@ -68,6 +68,7 @@ body {
   pointer-events: auto;
   position: relative;
   z-index: 1;
+  overflow: auto;
 }
 
 /* Card Styles */
@@ -159,7 +160,8 @@ body {
   transition: all 0.3s ease;
   position: relative;
   overflow: hidden;
-  pointer-events: auto;
+  pointer-events: auto !important;
+  z-index: 10;
 }
 
 .cyber-btn::before {
@@ -401,6 +403,8 @@ body {
   text-transform: uppercase;
   font-size: 12px;
   letter-spacing: 1px;
+  pointer-events: auto !important;
+  z-index: 10;
 }
 
 .quiz-action-btn:hover {
