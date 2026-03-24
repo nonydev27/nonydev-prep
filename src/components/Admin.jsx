@@ -69,20 +69,34 @@ export default function Admin({ onLogout, user }) {
     return mergedResults.find(r => r.studentRef === refNum);
   };
 
-  // Load quiz results from localStorage
+  // Load quiz results from server API
   useEffect(() => {
-    const loadResults = () => {
-      const storedResults = JSON.parse(localStorage.getItem('quizResults') || '[]');
-      setQuizResults(storedResults);
+    const loadResults = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/results');
+        if (response.ok) {
+          const data = await response.json();
+          setQuizResults(data);
+        } else {
+          // Fallback to localStorage if server is unavailable
+          const storedResults = JSON.parse(localStorage.getItem('quizResults') || '[]');
+          setQuizResults(storedResults);
+        }
+      } catch (error) {
+        console.error('Error loading from server:', error);
+        // Fallback to localStorage
+        const storedResults = JSON.parse(localStorage.getItem('quizResults') || '[]');
+        setQuizResults(storedResults);
+      }
     };
     loadResults();
     
-    // Poll for new results every 5 seconds when on results tab
+    // Poll for new results every 3 seconds when on results tab
     const interval = setInterval(() => {
       if (activeTab === 'results') {
         loadResults();
       }
-    }, 5000);
+    }, 3000);
     
     return () => clearInterval(interval);
   }, [activeTab]);

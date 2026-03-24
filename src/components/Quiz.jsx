@@ -274,6 +274,42 @@ export default function Quiz({ onLogout, user }) {
     const answered = Object.keys(answers).length;
     const unanswered = quizData.questions.length - answered;
     
+    // Create result object
+    const result = {
+      quizId: 1,
+      studentRef: user?.referenceNumber || user?.name || 'unknown',
+      studentName: user?.name || 'Unknown Student',
+      score: score,
+      totalQuestions: quizData.questions.length,
+      warnings: cheatCount,
+      status: cheatCount >= 3 ? 'Terminated' : 'Completed',
+      submittedAt: new Date().toISOString(),
+      answers: quizData.questions.map((_, idx) => answers[idx] !== undefined ? answers[idx] : null)
+    };
+    
+    // Save to localStorage (backup)
+    const existingResults = JSON.parse(localStorage.getItem('quizResults') || '[]');
+    const updatedResults = existingResults.filter(r => r.studentRef !== result.studentRef);
+    updatedResults.push(result);
+    localStorage.setItem('quizResults', JSON.stringify(updatedResults));
+    
+    // Send to server API
+    fetch('http://localhost:3001/api/results', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(result),
+    })
+    .then(response => response.json())
+    .then(data => {
+      console.log('Result saved to server:', data);
+    })
+    .catch(error => {
+      console.error('Error saving to server:', error);
+      // Continue anyway - localStorage has the backup
+    });
+    
     alert(
       `Exam Summary:\n\n` +
       `Questions Answered: ${answered}/${quizData.questions.length}\n` +
