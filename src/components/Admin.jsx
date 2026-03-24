@@ -472,7 +472,7 @@ export default function Admin({ onLogout, user }) {
                   <h3 style={{ 
                     color: selectedStudent.status === 'Completed' ? '#2ed573' : selectedStudent.status === 'Terminated' ? '#ff4757' : '#FFDE42',
                     margin: 0, 
-                    required
+                    required}}
                     min="1"
                   />
                 </div>
