@@ -12,6 +12,7 @@ export default function Admin({ onLogout, user }) {
     { referenceNumber: '21839316', name: 'Benniton Otumfuo-Nyarko' },
     { referenceNumber: '21875777', name: 'Memunatu Lukman' },
     { referenceNumber: '22041319', name: 'Osei Prempeh Erica' },
+    { referenceNumber: '22326459', name: 'Genevieve Nana Akua Selase' },
   ];
 
   // Available quizzes
